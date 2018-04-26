@@ -207,16 +207,13 @@ def random_mode(arrival, service, m, setup_time, delayedoff_time, time_end):
 
         else if next_event_type == 3:
             server_state[first_countdown_to_turnoff_server] = 0
+            delayedoff_timer_for_server[first_countdown_to_turnoff_server] = Inf
             
                 
                 
 
             
-                
-            
-                
-            
-            
+
                 
 
                 
