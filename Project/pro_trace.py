@@ -6,9 +6,14 @@ Inf = float('inf')
 def trace_mode(arrival, service, m, setup_time, delayedoff_time):
 
 
-    arrival_time = [10, 20, 32, 33]
-    service_time = [1, 2, 3, 4]
+##    arrival_time = [10, 20, 32, 33]
+##    service_time = [1, 2, 3, 4]
+
+    arrival_time = [1, 2, 3.2, 3.3]
+    service_time = [0.1, 0.2, 0.3, 0.4]
     
+##    arrival_time = [1, 2, 3.2, 3.3]
+##    service_time = [0.1, 0,2, 0,3, 0,4]
     
     # mean arrival rate
     lam = arrival
@@ -264,7 +269,7 @@ def trace_mode(arrival, service, m, setup_time, delayedoff_time):
                 
 
 
-trace_mode(1, 2, 3, 50, 100)
+trace_mode(1, 2, 3, 5, 10)
     
     
     
