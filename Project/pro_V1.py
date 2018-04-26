@@ -171,12 +171,14 @@ def random_mode(arrival, service, m, setup_time, delayedoff_time, time_end):
                         queue_length -= 1
                         
                     else: # No unmarked job, needs to turn off a server
-                        candidate_list = np.where(server_state == 0)[0]
+                        candidate_list = np.where(server_state == 1)[0]
 
                         chosen_server = -1
                         longestRemaining = -1
                         
-                        for sId in candidate_list:
+                        for sID in candidate_list:
+                            if set_up_time_for_server[sID] == Inf:
+                                continue
                             if longestRemaining < set_up_time_for_server[sID]:
                                 longestRemaining = set_up_time_for_server[sID]
                                 chosen_server = sID
