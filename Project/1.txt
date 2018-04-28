@@ -1,0 +1,219 @@
+0
+server state: 
+[[ 0.]
+ [ 0.]
+ [ 0.]]
+next_departure_time
+[[ inf]
+ [ inf]
+ [ inf]]
+
+set_up_time_for_server
+[[ inf]
+ [ inf]
+ [ inf]]
+
+delayedoff_timer_for_server
+[[ inf]
+ [ inf]
+ [ inf]]
+first_departure_time: inf
+first_setup_finish_time: inf
+first_countdown_to_turnoff_time: inf
+10
+[10, 1, 'marked']
+server state: 
+[[ 1.]
+ [ 0.]
+ [ 0.]]
+next_departure_time
+[[ inf]
+ [ inf]
+ [ inf]]
+
+set_up_time_for_server
+[[ 60.]
+ [ inf]
+ [ inf]]
+
+delayedoff_timer_for_server
+[[ inf]
+ [ inf]
+ [ inf]]
+first_departure_time: inf
+first_setup_finish_time: 60.0
+first_countdown_to_turnoff_time: inf
+20
+[10, 1, 'marked']
+[20, 2, 'marked']
+server state: 
+[[ 1.]
+ [ 1.]
+ [ 0.]]
+next_departure_time
+[[ inf]
+ [ inf]
+ [ inf]]
+
+set_up_time_for_server
+[[ 60.]
+ [ 70.]
+ [ inf]]
+
+delayedoff_timer_for_server
+[[ inf]
+ [ inf]
+ [ inf]]
+first_departure_time: inf
+first_setup_finish_time: 60.0
+first_countdown_to_turnoff_time: inf
+32
+[10, 1, 'marked']
+[20, 2, 'marked']
+[32, 3, 'marked']
+server state: 
+[[ 1.]
+ [ 1.]
+ [ 1.]]
+next_departure_time
+[[ inf]
+ [ inf]
+ [ inf]]
+
+set_up_time_for_server
+[[ 60.]
+ [ 70.]
+ [ 82.]]
+
+delayedoff_timer_for_server
+[[ inf]
+ [ inf]
+ [ inf]]
+first_departure_time: inf
+first_setup_finish_time: 60.0
+first_countdown_to_turnoff_time: inf
+33
+[10, 1, 'marked']
+[20, 2, 'marked']
+[32, 3, 'marked']
+[33, 4, 'unmarked']
+server state: 
+[[ 1.]
+ [ 1.]
+ [ 1.]]
+next_departure_time
+[[ inf]
+ [ inf]
+ [ inf]]
+
+set_up_time_for_server
+[[ 60.]
+ [ 70.]
+ [ 82.]]
+
+delayedoff_timer_for_server
+[[ inf]
+ [ inf]
+ [ inf]]
+first_departure_time: inf
+first_setup_finish_time: 60.0
+first_countdown_to_turnoff_time: inf
+60.0
+[20, 2, 'marked']
+[32, 3, 'marked']
+[33, 4, 'unmarked']
+server state: 
+[[ 3.]
+ [ 1.]
+ [ 1.]]
+next_departure_time
+[[ 61.]
+ [ inf]
+ [ inf]]
+
+set_up_time_for_server
+[[ inf]
+ [ 70.]
+ [ 82.]]
+
+delayedoff_timer_for_server
+[[ inf]
+ [ inf]
+ [ inf]]
+first_departure_time: 61.0
+first_setup_finish_time: 70.0
+first_countdown_to_turnoff_time: inf
+61.0
+[32, 3, 'marked']
+[33, 4, 'marked']
+server state: 
+[[ 3.]
+ [ 1.]
+ [ 1.]]
+next_departure_time
+[[ 63.]
+ [ inf]
+ [ inf]]
+
+set_up_time_for_server
+[[ inf]
+ [ 70.]
+ [ 82.]]
+
+delayedoff_timer_for_server
+[[ inf]
+ [ inf]
+ [ inf]]
+first_departure_time: 63.0
+first_setup_finish_time: 70.0
+first_countdown_to_turnoff_time: inf
+63.0
+[33, 4, 'marked']
+server state: 
+[[ 3.]
+ [ 1.]
+ [ 0.]]
+next_departure_time
+[[ 66.]
+ [ inf]
+ [ inf]]
+
+set_up_time_for_server
+[[ inf]
+ [ 70.]
+ [ inf]]
+
+delayedoff_timer_for_server
+[[ inf]
+ [ inf]
+ [ inf]]
+first_departure_time: 66.0
+first_setup_finish_time: 70.0
+first_countdown_to_turnoff_time: inf
+66.0
+server state: 
+[[ 3.]
+ [ 0.]
+ [ 0.]]
+next_departure_time
+[[ 70.]
+ [ inf]
+ [ inf]]
+
+set_up_time_for_server
+[[ inf]
+ [ inf]
+ [ inf]]
+
+delayedoff_timer_for_server
+[[ inf]
+ [ inf]
+ [ inf]]
+first_departure_time: 70.0
+first_setup_finish_time: inf
+first_countdown_to_turnoff_time: inf
+[array([ 33.]), 61.0]
+[array([ 33.]), 63.0]
+[array([ 33.]), 66.0]
+[array([ 33.]), 70.0]
+The estimated mean response time is: [ 41.25]

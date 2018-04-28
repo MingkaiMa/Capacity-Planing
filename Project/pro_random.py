@@ -23,6 +23,8 @@ def random_mode(arrival, service, m, setup_time, delayedoff_time, time_end):
     next_departure_time = Inf * np.ones((m, 1))
 
 
+    departure_info = []
+    response_time_record = []
     master_clock = 0
 
     #
@@ -73,7 +75,7 @@ def random_mode(arrival, service, m, setup_time, delayedoff_time, time_end):
             next_event_type = 1
 
         # departure time first
-        else if first_departure_time < first_setup_finish_time and first_departure_time < first_countdown_to_turnoff_time:        
+        elif first_departure_time < first_setup_finish_time and first_departure_time < first_countdown_to_turnoff_time:        
             if next_arrival_time < first_departure_time: # an arrival
                 next_event_time = next_arrival_time
                 next_event_type = 1
@@ -82,7 +84,7 @@ def random_mode(arrival, service, m, setup_time, delayedoff_time, time_end):
                 next_event_type = 0
 
         # setup finished, turn to busy
-        else if first_setup_finish_time < first_departure_time and first_setup_finish_time < first_countdown_to_turnoff_time:
+        elif first_setup_finish_time < first_departure_time and first_setup_finish_time < first_countdown_to_turnoff_time:
             if next_arrival_time < first_setup_finish_time:  # an arrival
                 next_event_time = next_arrival_time
                 next_event_type = 1
@@ -90,7 +92,7 @@ def random_mode(arrival, service, m, setup_time, delayedoff_time, time_end):
                 next_event_time = first_setup_finish_time
                 next_event_type = 2
 
-        else if first_countdown_to_turnoff_time < first_departure_time and first_countdown_to_turnoff_time < first_setup_finish_time:
+        elif first_countdown_to_turnoff_time < first_departure_time and first_countdown_to_turnoff_time < first_setup_finish_time:
             if next_arrival_time < first_countdown_to_turnoff_time:
                 next_event_time = next_arrival_time
                 next_event_type = 1
@@ -112,7 +114,7 @@ def random_mode(arrival, service, m, setup_time, delayedoff_time, time_end):
                 maxCountTimer = -1
                 chosen_server = -1
                 
-                for serverID in candidiate_list:
+                for serverID in candidate_list:
                     if maxCountTimer < delayedoff_timer_for_server[serverID]:
                         maxCountTimer = delayedoff_timer_for_server[serverID]
                         chosen_server = serverID
@@ -123,7 +125,7 @@ def random_mode(arrival, service, m, setup_time, delayedoff_time, time_end):
             #
             # at least a server in the off state, then set up the server
             #
-            else if any(i == 0 for i in server_state):
+            elif any(i == 0 for i in server_state):
                 candidate_list = np.where(server_state == 0)[0]
                 chosen_server = np.min(candidate_list)
                 server_state[chosen_server] = 1  # 1: SETUP
@@ -142,9 +144,13 @@ def random_mode(arrival, service, m, setup_time, delayedoff_time, time_end):
             next_arrival_time = master_clock - log(1 - random.random()) / lam
             service_time_next_arrival = -log(1 - random.random()) / mu + (-log(1 - random.random()) / mu) + (-log(1 - random.random()) / mu)
 
-        else if next_event_type == 0: # A departure
+        elif next_event_type == 0: # A departure
             response_time_cumulative = response_time_cumulative + master_clock - arrival_time_next_departure[first_departure_server]
             num_customer_served += 1
+
+            tmp = arrival_time_next_departure[first_departure_server]
+            departure_info.append([tmp[0], master_clock])
+            response_time_record.append(master_clock - tmp[0])
 
             if queue_length:
                 to_be_processed = buffer_content[0]
@@ -197,28 +203,41 @@ def random_mode(arrival, service, m, setup_time, delayedoff_time, time_end):
                 server_state[first_departure_server] = 3
                 delayedoff_timer_for_server[first_departure_server] = master_clock + delayedoff_time
 
-        else if next_event_type == 2: # setup finished, take a marked job from queue, state from setup to busy
+        elif next_event_type == 2: # setup finished, take a marked job from queue, state from setup to busy
             server_state[first_setup_finish_server] = 3
+            set_up_time_for_server[first_setup_finish_server] = Inf
             to_be_processed = buffer_content[0]
             next_departure_time[first_setup_finish_server] = master_clock + to_be_processed[1]
             arrival_time_next_departure[first_setup_finish_server] = to_be_processed[0]
             buffer_content.pop(0)
             queue_length -= 1
 
-        else if next_event_type == 3:
+        elif next_event_type == 3:
             server_state[first_countdown_to_turnoff_server] = 0
             delayedoff_timer_for_server[first_countdown_to_turnoff_server] = Inf
-            
-                
-                
 
-            
 
-                
+ 
+##    for i in departure_info:
+##        print(i)
+    #print(len(response_time_record))
+    #print(response_time_record)
+    #print(f'num_customer_served: {num_customer_served}')
+    print(f'The estimated mean response time is: {response_time_cumulative/num_customer_served}')
 
-                
-                    
-                    
+
+##print(f'Tc time: {0.1}')
+##random_mode(0.35, 1, 5, 5, 0.1, 16000)
+##
+##for i in range(1, 100):
+##    print(f'Tc itme: {i}')
+##    random_mode(0.35, 1, 5, 5, i, 16000)
+##
+##                
+##
+for i in range(1, 500, 10):
+    print(i)
+    random_mode(0.35, 1, 5, 5, i, 56000)                  
                     
                 
                 

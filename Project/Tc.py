@@ -1,42 +1,33 @@
 import numpy as np
 import random
 from math import log
+import sys
 Inf = float('inf')
 
-def trace_mode(arrival, service, m, setup_time, delayedoff_time):
+def random_mode(arrival, service, m, setup_time, delayedoff_time, time_end):
 
 
-    arrival_time = [10, 20, 32, 33]
-    service_time = [1, 2, 3, 4]
-
-##    arrival_time = [1.0, 2.0, 3.2, 3.3]
-##    service_time = [0.1, 0.2, 0.3, 0.4]
+    response_time_cumulative = 0
+    num_customer_served = 0
     
-##    arrival_time = [1, 2, 3.2, 3.3]
-##    service_time = [0.1, 0,2, 0,3, 0,4]
-    
+    #
     # mean arrival rate
     lam = arrival
     #
     # mean service time
     mu = service
+    
 
-    response_time_cumulative = 0 #  The cumulative response time 
-    num_customer_served = 0 # number of completed customers at the end of the simulation
+    next_arrival_time = -log(1 - random.random()) / lam
+    service_time_next_arrival = -log(1 - random.random()) / mu + (-log(1 - random.random()) / mu) + (-log(1 - random.random()) / mu)
 
-    next_arrival_time = arrival_time[0]
-    service_time_next_arrival = service_time[0]
-
-    job_counter = 1
-
-    number_of_jobs = len(arrival_time)
-
-    departure_info = []
-    #
     next_departure_time = Inf * np.ones((m, 1))
 
+
+    departure_info = []
+    response_time_record = []
     master_clock = 0
-    
+
     #
     # A server may have four states:
     # 0: OFF
@@ -45,37 +36,21 @@ def trace_mode(arrival, service, m, setup_time, delayedoff_time):
     # 3: DELAYEDOFF
     # initial states for all servers are 0: OFF
     server_state = np.zeros((m, 1))
-    
-    arrival_time_next_departure = np.zeros((m, 1))
 
+    arrival_time_next_departure = np.zeros((m, 1))
+    
     #
     # set up time for servers
     set_up_time_for_server = Inf * np.ones((m, 1))
     #
     # delayedoff timer for servers
     delayedoff_timer_for_server = Inf * np.ones((m, 1))
-
+    
     buffer_content = []
     queue_length = 0
 
-    # Start iteration until the end time
-    while 1:
+    while master_clock < time_end:
 
-        print(master_clock)
-        for i in buffer_content:
-            print(i)
-
-        print('server state: ')
-        print(server_state)
-
-        print('next_departure_time')
-        print(next_departure_time)
-        print()
-        print('set_up_time_for_server')
-        print(set_up_time_for_server)
-        print()
-        print('delayedoff_timer_for_server')
-        print(delayedoff_timer_for_server)
         first_departure_time = np.min(next_departure_time)
         first_departure_server = np.argmin(next_departure_time)
 
@@ -84,10 +59,6 @@ def trace_mode(arrival, service, m, setup_time, delayedoff_time):
 
         first_countdown_to_turnoff_time = np.min(delayedoff_timer_for_server)
         first_countdown_to_turnoff_server = np.argmin(delayedoff_timer_for_server)
-
-        print(f'first_departure_time: {first_departure_time}')
-        print(f'first_setup_finish_time: {first_setup_finish_time}')
-        print(f'first_countdown_to_turnoff_time: {first_countdown_to_turnoff_time}')
         
         # 
         #
@@ -101,7 +72,6 @@ def trace_mode(arrival, service, m, setup_time, delayedoff_time):
 
         # At the beginning, an arrival
         if first_departure_time == Inf and first_setup_finish_time == Inf and first_countdown_to_turnoff_time == Inf:
-
             next_event_time = next_arrival_time
             next_event_type = 1
 
@@ -172,23 +142,16 @@ def trace_mode(arrival, service, m, setup_time, delayedoff_time):
                 queue_length += 1
 
 
-            if job_counter < number_of_jobs:
-                # Get next job
-                next_arrival_time = arrival_time[job_counter]
-                service_time_next_arrival = service_time[job_counter]
-                job_counter += 1
-            else:
-                next_arrival_time = Inf
-
+            next_arrival_time = master_clock - log(1 - random.random()) / lam
+            service_time_next_arrival = -log(1 - random.random()) / mu + (-log(1 - random.random()) / mu) + (-log(1 - random.random()) / mu)
 
         elif next_event_type == 0: # A departure
             response_time_cumulative = response_time_cumulative + master_clock - arrival_time_next_departure[first_departure_server]
             num_customer_served += 1
 
             tmp = arrival_time_next_departure[first_departure_server]
-
             departure_info.append([tmp[0], master_clock])
-
+            response_time_record.append(master_clock - tmp[0])
 
             if queue_length:
                 to_be_processed = buffer_content[0]
@@ -242,12 +205,10 @@ def trace_mode(arrival, service, m, setup_time, delayedoff_time):
                 delayedoff_timer_for_server[first_departure_server] = master_clock + delayedoff_time
 
         elif next_event_type == 2: # setup finished, take a marked job from queue, state from setup to busy
-
             server_state[first_setup_finish_server] = 3
             set_up_time_for_server[first_setup_finish_server] = Inf
             to_be_processed = buffer_content[0]
             next_departure_time[first_setup_finish_server] = master_clock + to_be_processed[1]
-
             arrival_time_next_departure[first_setup_finish_server] = to_be_processed[0]
             buffer_content.pop(0)
             queue_length -= 1
@@ -257,22 +218,74 @@ def trace_mode(arrival, service, m, setup_time, delayedoff_time):
             delayedoff_timer_for_server[first_countdown_to_turnoff_server] = Inf
 
 
-        if num_customer_served == number_of_jobs:
-            break
+ 
+##    for i in departure_info:
+##        print(i)
+    print(len(response_time_record))
+    #print(response_time_record)
+    #print(f'num_customer_served: {num_customer_served}')
+    #print(f'The estimated mean response time is: {response_time_cumulative/num_customer_served}')
+    return response_time_record
 
 
-            
-    for i in departure_info:
-        print(i)
-    print(f'The estimated mean response time is: {response_time_cumulative/num_customer_served}')
-
+##print(f'Tc time: {0.1}')
+##random_mode(0.35, 1, 5, 5, 0.1, 16000)
+##
+##for i in range(1, 100):
+##    print(f'Tc itme: {i}')
+##    random_mode(0.35, 1, 5, 5, i, 16000)
+##
+##                
+##
+##print('~~~')
+##print(len(random_mode(0.35, 1, 5, 5, 0.1, 56000)[:13000]))                
+##                    
+##                
                 
+##def transient_removal():
+#
+# number of simulation
+number_of_sim = 5
+#
+# number of data points in each simulation
+m = 13000
+response_time_traces = np.zeros((number_of_sim, m))
+
+for i in range(5):
+    response_time_traces[i] = random_mode(0.35, 1, 5, 5, 0.1, 56000)[: 13000]
 
 
-trace_mode(1, 2, 3, 50, 100)
+mt = np.mean(response_time_traces, axis = 0)
+
+##print(mt)
+w = 3000
+mt_smooth = np.zeros(m - w)
+
+for i in range(m - w):
+    if i <= w:
+        if i == 0:
+            mt_smooth[i] = mt[0]
+        else:
+            mt_smooth[i] = np.mean(mt[0: 2 * i + 1])
+    else:
+        mt_smooth[i] = np.mean(mt[i - w: i + w + 1])
+
+
+##transient_removal()
+##import matplotlib.pyplot as plt
+##plt.plot(mt_smooth)
+##plt.show()
+
+
+mt2 = np.mean(response_time_traces[:, 2000: ], axis = 1)
+np.mean(mt2)
+np.std(mt2)
+
+
+
     
-    
-    
-    
-    
+            
+            
+        
+
     
